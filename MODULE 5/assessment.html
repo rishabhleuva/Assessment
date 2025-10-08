@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Form</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #d9e7ff 0%, #a7c7e7 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        form {
+            background: #fff;
+            max-width: 440px;
+            margin: 48px auto 0 auto;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+            padding: 32px 28px 20px 28px;
+        }
+        label {
+            display: inline-block;
+            width: 140px;
+            text-align: right;
+            font-weight: 500;
+            color: #1b3c5b;
+        }
+        .form-row {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"] {
+            padding: 8px 12px;
+            border: 1.5px solid #d4e6fb;
+            border-radius: 8px;
+            width: 180px;
+            font-size: 1em;
+            margin-left: 14px;
+            transition: border 0.2s;
+            outline: none;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus {
+            border-color: #5396e5;
+            background: #f0f7ff;
+        }
+        .error-message {
+            color: #d83030;
+            font-size: 0.98em;
+            margin-left: 10px;
+            min-width: 120px;
+            display: inline-block;
+        }
+        input[type="submit"] {
+            margin-left: 156px;
+            width: 120px;
+            background: linear-gradient(90deg, #4f8cff, #24d6d6);
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            cursor: pointer;
+            border-radius: 30px;
+            font-size: 1.05em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+        input[type="submit"]:hover {
+            background: linear-gradient(90deg, #2c65d5, #18a3b4);
+        }
+        .success-message {
+            text-align: center;
+            color: #218c34;
+            font-weight: 600;
+            margin-top: 18px;
+            font-size: 1.12em;
+        }
+    </style>
+</head>
+<body>
+    <form id="bookingForm" autocomplete="off">
+        <div class="form-row">
+            <label for="fullname">Full Name :</label>
+            <input type="text" id="fullname" name="fullname">
+            <span class="error-message" id="error-fullname"></span>
+        </div>
+        <div class="form-row">
+            <label for="phnumber">Phone :</label>
+            <input type="tel" id="phnumber" name="phnumber">
+            <span class="error-message" id="error-phnumber"></span>
+        </div>
+        <div class="form-row">
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email">
+            <span class="error-message" id="error-email"></span>
+        </div>
+        <div class="form-row">
+            <label for="Aadhar">Aadhar :</label>
+            <input type="text" id="Aadhar" name="Aadhar">
+            <span class="error-message" id="error-aadhar"></span>
+        </div>
+        <div class="form-row">
+            <label for="cin">Check in :</label>
+            <input type="date" id="cin" name="cin">
+            <span class="error-message" id="error-cin"></span>
+        </div>
+        <div class="form-row">
+            <label for="cout">Check out :</label>
+            <input type="date" id="cout" name="cout">
+            <span class="error-message" id="error-cout"></span>
+        </div>
+        <div class="form-row">
+            <label for="purpose">Purpose of the visit :</label>
+            <input type="text" id="purpose" name="purpose">
+            <span class="error-message" id="error-purpose"></span>
+        </div>
+        <input type="submit" value="Submit">
+        <div id="success-message" class="success-message"></div>
+    </form>
+    <script>
+        const form = document.getElementById('bookingForm');
+        const errors = {
+            fullname: document.getElementById('error-fullname'),
+            phnumber: document.getElementById('error-phnumber'),
+            email: document.getElementById('error-email'),
+            aadhar: document.getElementById('error-aadhar'),
+            cin: document.getElementById('error-cin'),
+            cout: document.getElementById('error-cout'),
+            purpose: document.getElementById('error-purpose')
+        };
+        const successMsg = document.getElementById('success-message');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Clear previous errors
+            Object.values(errors).forEach(e => e.textContent = '');
+            successMsg.textContent = '';
+
+            let valid = true;
+
+            // Get form values
+            const fullname = form.fullname.value.trim();
+            const phnumber = form.phnumber.value.trim();
+            const email = form.email.value.trim();
+            const aadhar = form.Aadhar.value.trim();
+            const cin = form.cin.value;
+            const cout = form.cout.value;
+            const purpose = form.purpose.value.trim();
+
+            if (!fullname) {
+                errors.fullname.textContent = "Full name is required.";
+                valid = false;
+            }
+
+            const phonePattern = /^\d{10}$/;
+            if (!phonePattern.test(phnumber)) {
+                errors.phnumber.textContent = 'Enter valid 10-digit phone number.';
+                valid = false;
+            }
+
+            if (!email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
+                errors.email.textContent = 'Enter valid email address.';
+                valid = false;
+            }
+
+            const aadharPattern = /^\d{12}$/;
+            if (!aadharPattern.test(aadhar)) {
+                errors.aadhar.textContent = 'Enter valid 12-digit Aadhar number.';
+                valid = false;
+            }
+
+            if (!cin) {
+                errors.cin.textContent = "Please select check-in date.";
+                valid = false;
+            }
+            if (!cout) {
+                errors.cout.textContent = "Please select check-out date.";
+                valid = false;
+            }
+            if (cin && cout && new Date(cin) >= new Date(cout)) {
+                errors.cout.textContent = 'Check-out date must be after check-in date.';
+                valid = false;
+            }
+
+            if (!purpose) {
+                errors.purpose.textContent = "Purpose is required.";
+                valid = false;
+            }
+
+            if (valid) {
+                const formData = { fullname, phnumber, email, aadhar, cin, cout, purpose };
+                const allForms = JSON.parse(localStorage.getItem('bookingForms') || '[]');
+                allForms.push(formData);
+                localStorage.setItem('bookingForms', JSON.stringify(allForms));
+                successMsg.textContent = 'Form submitted successfully!';
+                form.reset();
+            }
+        });
+    </script>
+</body>
+</html>
